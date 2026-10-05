@@ -1,0 +1,321 @@
+const games = [
+  {
+    id: 'memory',
+    label: 'Memory Match',
+    icon: '🧠',
+    type: 'panel',
+    render: createMemoryGame,
+  },
+  {
+    id: 'tic-tac-toe',
+    label: 'Tic Tac Toe',
+    icon: '❌',
+    type: 'panel',
+    render: createTicTacToeGame,
+  },
+  {
+    id: 'rps',
+    label: 'Rock Paper Scissors',
+    icon: '✊',
+    type: 'panel',
+    render: createRpsGame,
+  },
+];
+
+const gameNav = document.getElementById('game-nav');
+const gamePanels = document.getElementById('game-panels');
+const resetButton = document.getElementById('reset-current-game');
+let activeGameId = games[0].id;
+
+function renderGameNavigation() {
+  games.forEach((game) => {
+    const button = document.createElement('button');
+    button.className = `nav-btn${game.id === activeGameId ? ' active' : ''}`;
+    button.type = 'button';
+    button.dataset.game = game.id;
+    button.innerHTML = `<span>${game.icon}</span>${game.label}`;
+    button.addEventListener('click', () => {
+      activeGameId = game.id;
+      renderGameNavigation();
+      renderGamePanels();
+    });
+    gameNav.appendChild(button);
+  });
+}
+
+function renderGamePanels() {
+  gamePanels.innerHTML = '';
+
+  games.forEach((game) => {
+    const panel = document.createElement('section');
+    panel.className = `game-panel${game.id === activeGameId ? ' active' : ''}`;
+    panel.dataset.gamePanel = game.id;
+
+    if (game.id === 'memory') {
+      panel.innerHTML = `
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Puzzle</p>
+            <h3>Memory Match</h3>
+          </div>
+          <div class="stats">
+            <span>Moves: <strong id="memory-moves">0</strong></span>
+            <span>Matches: <strong id="memory-matches">0/8</strong></span>
+          </div>
+        </div>
+        <div class="memory-board" id="memory-board" aria-label="Memory game board"></div>
+      `;
+    }
+
+    if (game.id === 'tic-tac-toe') {
+      panel.innerHTML = `
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Classic</p>
+            <h3>Tic Tac Toe</h3>
+          </div>
+          <div class="stats">
+            <span id="tic-status">Player X's turn</span>
+          </div>
+        </div>
+        <div class="ttt-board" id="tic-tac-toe-board" aria-label="Tic tac toe board">
+          <button class="ttt-cell" data-index="0" aria-label="Cell 1"></button>
+          <button class="ttt-cell" data-index="1" aria-label="Cell 2"></button>
+          <button class="ttt-cell" data-index="2" aria-label="Cell 3"></button>
+          <button class="ttt-cell" data-index="3" aria-label="Cell 4"></button>
+          <button class="ttt-cell" data-index="4" aria-label="Cell 5"></button>
+          <button class="ttt-cell" data-index="5" aria-label="Cell 6"></button>
+          <button class="ttt-cell" data-index="6" aria-label="Cell 7"></button>
+          <button class="ttt-cell" data-index="7" aria-label="Cell 8"></button>
+          <button class="ttt-cell" data-index="8" aria-label="Cell 9"></button>
+        </div>
+      `;
+    }
+
+    if (game.id === 'rps') {
+      panel.innerHTML = `
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Quick play</p>
+            <h3>Rock Paper Scissors</h3>
+          </div>
+          <div class="stats">
+            <span>Player: <strong id="rps-player-score">0</strong></span>
+            <span>CPU: <strong id="rps-cpu-score">0</strong></span>
+          </div>
+        </div>
+        <div class="rps-container">
+          <div class="rps-actions">
+            <button class="rps-choice" data-choice="rock">✊ Rock</button>
+            <button class="rps-choice" data-choice="paper">✋ Paper</button>
+            <button class="rps-choice" data-choice="scissors">✌️ Scissors</button>
+          </div>
+          <div class="rps-result-box">
+            <p class="result-label">Result</p>
+            <h4 id="rps-result">Make your move</h4>
+          </div>
+        </div>
+      `;
+    }
+
+    gamePanels.appendChild(panel);
+  });
+
+  createMemoryGame();
+  createTicTacToeGame();
+  createRpsGame();
+}
+
+function createMemoryGame() {
+  const board = document.getElementById('memory-board');
+  if (!board) return;
+
+  const emojiSet = ['🌙', '⭐', '🚀', '🎮', '🔥', '💎', '⚡', '🎯'];
+  const deck = [...emojiSet, ...emojiSet].map((emoji, index) => ({ id: index, emoji })).sort(() => Math.random() - 0.5);
+
+  const movesEl = document.getElementById('memory-moves');
+  const matchesEl = document.getElementById('memory-matches');
+  let flipped = [];
+  let matched = 0;
+  let movesCount = 0;
+  let lockBoard = false;
+
+  board.innerHTML = '';
+  movesEl.textContent = '0';
+  matchesEl.textContent = '0/8';
+
+  deck.forEach((card) => {
+    const button = document.createElement('button');
+    button.className = 'memory-card';
+    button.type = 'button';
+    button.dataset.emoji = card.emoji;
+    button.setAttribute('aria-label', 'Hidden memory card');
+
+    button.addEventListener('click', () => {
+      if (lockBoard || flipped.includes(button) || button.classList.contains('matched')) return;
+
+      button.textContent = card.emoji;
+      button.classList.add('revealed');
+      flipped.push(button);
+
+      if (flipped.length === 2) {
+        const [first, second] = flipped;
+        movesCount += 1;
+        movesEl.textContent = String(movesCount);
+
+        if (first.dataset.emoji === second.dataset.emoji) {
+          first.classList.add('matched');
+          second.classList.add('matched');
+          matched += 1;
+          matchesEl.textContent = `${matched}/8`;
+          flipped = [];
+
+          if (matched === 8) {
+            setTimeout(() => alert('You solved the memory match!'), 300);
+          }
+        } else {
+          lockBoard = true;
+          setTimeout(() => {
+            first.textContent = '';
+            second.textContent = '';
+            first.classList.remove('revealed');
+            second.classList.remove('revealed');
+            flipped = [];
+            lockBoard = false;
+          }, 700);
+        }
+      }
+    });
+
+    board.appendChild(button);
+  });
+}
+
+function createTicTacToeGame() {
+  const cells = document.querySelectorAll('.ttt-cell');
+  if (!cells.length) return;
+
+  const status = document.getElementById('tic-status');
+  let board = Array(9).fill('');
+  let currentPlayer = 'X';
+  let gameOver = false;
+
+  function checkWinner(boardState) {
+    const patterns = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6],
+    ];
+
+    for (const pattern of patterns) {
+      const [a, b, c] = pattern;
+      if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
+        return boardState[a];
+      }
+    }
+
+    return null;
+  }
+
+  function resetBoard() {
+    board = Array(9).fill('');
+    currentPlayer = 'X';
+    gameOver = false;
+    status.textContent = "Player X's turn";
+    cells.forEach((cell) => {
+      cell.textContent = '';
+      cell.disabled = false;
+    });
+  }
+
+  cells.forEach((cell) => {
+    cell.addEventListener('click', () => {
+      const index = Number(cell.dataset.index);
+      if (board[index] || gameOver) return;
+
+      board[index] = currentPlayer;
+      cell.textContent = currentPlayer;
+
+      const winner = checkWinner(board);
+      if (winner) {
+        status.textContent = `Player ${winner} wins!`;
+        gameOver = true;
+        cells.forEach((btn) => (btn.disabled = true));
+        return;
+      }
+
+      if (board.every((value) => value !== '')) {
+        status.textContent = "It's a draw!";
+        gameOver = true;
+        return;
+      }
+
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      status.textContent = `Player ${currentPlayer}'s turn`;
+    });
+  });
+
+  resetButton.addEventListener('click', resetBoard);
+  resetBoard();
+}
+
+function createRpsGame() {
+  const result = document.getElementById('rps-result');
+  const playerScore = document.getElementById('rps-player-score');
+  const cpuScore = document.getElementById('rps-cpu-score');
+  if (!result || !playerScore || !cpuScore) return;
+
+  let playerWins = 0;
+  let cpuWins = 0;
+  const choices = ['rock', 'paper', 'scissors'];
+
+  document.querySelectorAll('.rps-choice').forEach((button) => {
+    button.addEventListener('click', () => {
+      const playerChoice = button.dataset.choice;
+      const cpuChoice = choices[Math.floor(Math.random() * choices.length)];
+      let text = 'Tie!';
+
+      if (
+        (playerChoice === 'rock' && cpuChoice === 'scissors') ||
+        (playerChoice === 'paper' && cpuChoice === 'rock') ||
+        (playerChoice === 'scissors' && cpuChoice === 'paper')
+      ) {
+        playerWins += 1;
+        text = `You win! ${playerChoice} beats ${cpuChoice}.`;
+      } else if (
+        (cpuChoice === 'rock' && playerChoice === 'scissors') ||
+        (cpuChoice === 'paper' && playerChoice === 'rock') ||
+        (cpuChoice === 'scissors' && playerChoice === 'paper')
+      ) {
+        cpuWins += 1;
+        text = `CPU wins! ${cpuChoice} beats ${playerChoice}.`;
+      } else {
+        text = `Draw! You both chose ${playerChoice}.`;
+      }
+
+      result.textContent = text;
+      playerScore.textContent = String(playerWins);
+      cpuScore.textContent = String(cpuWins);
+    });
+  });
+
+  resetButton.addEventListener('click', () => {
+    playerWins = 0;
+    cpuWins = 0;
+    playerScore.textContent = '0';
+    cpuScore.textContent = '0';
+    result.textContent = 'Make your move';
+  });
+}
+
+renderGameNavigation();
+renderGamePanels();
+
+if (typeof window !== 'undefined') {
+  resetButton.addEventListener('click', () => {
+    const activeGame = games.find((game) => game.id === activeGameId);
+    if (activeGame && typeof activeGame.render === 'function') {
+      activeGame.render();
+    }
+  });
+}
