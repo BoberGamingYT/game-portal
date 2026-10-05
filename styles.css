@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="creator-tag">Created by BoberGamingYT</div>
+
+    <div class="page-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">G</div>
+          <div>
+            <span class="eyebrow">Arcade</span>
+            <h1>Game Portal</h1>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Game menu">
+          <button class="nav-btn active" data-game="memory">
+            <span>🧠</span>
+            Memory Match
+          </button>
+          <button class="nav-btn" data-game="tic-tac-toe">
+            <span>❌</span>
+            Tic Tac Toe
+          </button>
+          <button class="nav-btn" data-game="rps">
+            <span>✊</span>
+            Rock Paper Scissors
+          </button>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Welcome back</p>
+            <h2>Pick a game and start playing</h2>
+          </div>
+          <button class="primary-button" id="reset-current-game">Reset Game</button>
+        </header>
+
+        <section class="game-panel active" id="memory-panel" data-game-panel="memory">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Puzzle</p>
+              <h3>Memory Match</h3>
+            </div>
+            <div class="stats">
+              <span>Moves: <strong id="memory-moves">0</strong></span>
+              <span>Matches: <strong id="memory-matches">0/8</strong></span>
+            </div>
+          </div>
+
+          <div class="memory-board" id="memory-board" aria-label="Memory game board"></div>
+        </section>
+
+        <section class="game-panel" id="tic-tac-toe-panel" data-game-panel="tic-tac-toe">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Classic</p>
+              <h3>Tic Tac Toe</h3>
+            </div>
+            <div class="stats">
+              <span id="tic-status">Player X's turn</span>
+            </div>
+          </div>
+
+          <div class="ttt-board" id="tic-tac-toe-board" aria-label="Tic tac toe board">
+            <button class="ttt-cell" data-index="0" aria-label="Cell 1"></button>
+            <button class="ttt-cell" data-index="1" aria-label="Cell 2"></button>
+            <button class="ttt-cell" data-index="2" aria-label="Cell 3"></button>
+            <button class="ttt-cell" data-index="3" aria-label="Cell 4"></button>
+            <button class="ttt-cell" data-index="4" aria-label="Cell 5"></button>
+            <button class="ttt-cell" data-index="5" aria-label="Cell 6"></button>
+            <button class="ttt-cell" data-index="6" aria-label="Cell 7"></button>
+            <button class="ttt-cell" data-index="7" aria-label="Cell 8"></button>
+            <button class="ttt-cell" data-index="8" aria-label="Cell 9"></button>
+          </div>
+        </section>
+
+        <section class="game-panel" id="rps-panel" data-game-panel="rps">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Quick play</p>
+              <h3>Rock Paper Scissors</h3>
+            </div>
+            <div class="stats">
+              <span>Player: <strong id="rps-player-score">0</strong></span>
+              <span>CPU: <strong id="rps-cpu-score">0</strong></span>
+            </div>
+          </div>
+
+          <div class="rps-container">
+            <div class="rps-actions">
+              <button class="rps-choice" data-choice="rock">✊ Rock</button>
+              <button class="rps-choice" data-choice="paper">✋ Paper</button>
+              <button class="rps-choice" data-choice="scissors">✌️ Scissors</button>
+            </div>
+            <div class="rps-result-box">
+              <p class="result-label">Result</p>
+              <h4 id="rps-result">Make your move</h4>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
