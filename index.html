@@ -6,32 +6,47 @@
     <title>Game Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="creator-tag">Created by BoberGamingYT</div>
+    <div class="stars"></div>
 
     <div class="page-shell">
       <aside class="sidebar">
         <div class="brand">
-          <div class="brand-mark">G</div>
+          <div class="brand-mark">🎮</div>
           <div>
-            <span class="eyebrow">Arcade</span>
+            <span class="eyebrow">Ultimate</span>
             <h1>Game Portal</h1>
           </div>
         </div>
 
-        <nav class="nav" id="game-nav" aria-label="Game menu"></nav>
+        <div class="category-section">
+          <p class="category-title">Classic Arcade</p>
+          <nav class="nav" id="arcade-nav"></nav>
+        </div>
+
+        <div class="category-section">
+          <p class="category-title">Modern Games</p>
+          <nav class="nav" id="modern-nav"></nav>
+        </div>
       </aside>
 
       <main class="content">
         <header class="topbar">
           <div>
-            <p class="eyebrow">Welcome back</p>
-            <h2>Pick a game and start playing</h2>
+            <p class="eyebrow">Arcade lobby</p>
+            <h2 id="game-title">Select a game</h2>
           </div>
-          <button class="primary-button" id="reset-current-game">Reset Game</button>
+          <div class="top-actions">
+            <div class="score-display">
+              <span class="score-label">Score</span>
+              <span class="score-value" id="global-score">0</span>
+            </div>
+            <button class="primary-button" id="reset-current-game">Reset</button>
+          </div>
         </header>
 
         <section id="game-panels"></section>
