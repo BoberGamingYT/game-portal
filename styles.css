@@ -1,118 +1,515 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Game Portal</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="creator-tag">Created by BoberGamingYT</div>
+:root {
+  --primary: #00f7a5;
+  --secondary: #ff4fd8;
+  --accent: #ffb703;
+  --bg-dark: #0a0e1a;
+  --bg-panel: #121e2f;
+  --text-light: #edf6ff;
+  --text-muted: #9baec8;
+  --neon-glow: 0 0 20px rgba(0, 247, 165, 0.6);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    <div class="page-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-mark">G</div>
-          <div>
-            <span class="eyebrow">Arcade</span>
-            <h1>Game Portal</h1>
-          </div>
-        </div>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-        <nav class="nav" aria-label="Game menu">
-          <button class="nav-btn active" data-game="memory">
-            <span>🧠</span>
-            Memory Match
-          </button>
-          <button class="nav-btn" data-game="tic-tac-toe">
-            <span>❌</span>
-            Tic Tac Toe
-          </button>
-          <button class="nav-btn" data-game="rps">
-            <span>✊</span>
-            Rock Paper Scissors
-          </button>
-        </nav>
-      </aside>
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #0a0e1a 0%, #1a0f2e 50%, #0d1520 100%);
+  color: var(--text-light);
+  overflow-x: hidden;
+}
 
-      <main class="content">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Welcome back</p>
-            <h2>Pick a game and start playing</h2>
-          </div>
-          <button class="primary-button" id="reset-current-game">Reset Game</button>
-        </header>
+.background-stars {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(2px 2px at 60px 70px, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 50px 50px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 90px 10px, rgba(255,255,255,0.5), transparent);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
 
-        <section class="game-panel active" id="memory-panel" data-game-panel="memory">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Puzzle</p>
-              <h3>Memory Match</h3>
-            </div>
-            <div class="stats">
-              <span>Moves: <strong id="memory-moves">0</strong></span>
-              <span>Matches: <strong id="memory-matches">0/8</strong></span>
-            </div>
-          </div>
+.creator-watermark {
+  position: fixed;
+  top: 15px;
+  right: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  text-shadow: 0 0 10px rgba(0, 247, 165, 0.8);
+  z-index: 50;
+  letter-spacing: 1px;
+}
 
-          <div class="memory-board" id="memory-board" aria-label="Memory game board"></div>
-        </section>
+.container {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+  gap: 0;
+}
 
-        <section class="game-panel" id="tic-tac-toe-panel" data-game-panel="tic-tac-toe">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Classic</p>
-              <h3>Tic Tac Toe</h3>
-            </div>
-            <div class="stats">
-              <span id="tic-status">Player X's turn</span>
-            </div>
-          </div>
+.sidebar {
+  background: linear-gradient(180deg, rgba(18, 30, 47, 0.95) 0%, rgba(12, 18, 28, 0.98) 100%);
+  border-right: 2px solid rgba(0, 247, 165, 0.3);
+  padding: 30px 20px;
+  overflow-y: auto;
+  max-height: 100vh;
+}
 
-          <div class="ttt-board" id="tic-tac-toe-board" aria-label="Tic tac toe board">
-            <button class="ttt-cell" data-index="0" aria-label="Cell 1"></button>
-            <button class="ttt-cell" data-index="1" aria-label="Cell 2"></button>
-            <button class="ttt-cell" data-index="2" aria-label="Cell 3"></button>
-            <button class="ttt-cell" data-index="3" aria-label="Cell 4"></button>
-            <button class="ttt-cell" data-index="4" aria-label="Cell 5"></button>
-            <button class="ttt-cell" data-index="5" aria-label="Cell 6"></button>
-            <button class="ttt-cell" data-index="6" aria-label="Cell 7"></button>
-            <button class="ttt-cell" data-index="7" aria-label="Cell 8"></button>
-            <button class="ttt-cell" data-index="8" aria-label="Cell 9"></button>
-          </div>
-        </section>
+.logo-section {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(0, 247, 165, 0.2);
+}
 
-        <section class="game-panel" id="rps-panel" data-game-panel="rps">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Quick play</p>
-              <h3>Rock Paper Scissors</h3>
-            </div>
-            <div class="stats">
-              <span>Player: <strong id="rps-player-score">0</strong></span>
-              <span>CPU: <strong id="rps-cpu-score">0</strong></span>
-            </div>
-          </div>
+.logo {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  display: block;
+  animation: pulse 2s ease-in-out infinite;
+}
 
-          <div class="rps-container">
-            <div class="rps-actions">
-              <button class="rps-choice" data-choice="rock">✊ Rock</button>
-              <button class="rps-choice" data-choice="paper">✋ Paper</button>
-              <button class="rps-choice" data-choice="scissors">✌️ Scissors</button>
-            </div>
-            <div class="rps-result-box">
-              <p class="result-label">Result</p>
-              <h4 id="rps-result">Make your move</h4>
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
 
-    <script src="app.js"></script>
-  </body>
-</html>
+.logo-section h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  color: var(--primary);
+  text-shadow: 0 0 15px rgba(0, 247, 165, 0.7);
+  margin-bottom: 5px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.tagline {
+  font-size: 0.75rem;
+  color: var(--secondary);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+}
+
+.categories-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.category-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.category-header {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--secondary);
+  font-weight: 700;
+  margin: 10px 0 5px 0;
+}
+
+.nav-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-btn {
+  background: rgba(0, 247, 165, 0.08);
+  border: 1px solid rgba(0, 247, 165, 0.3);
+  color: var(--text-light);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: left;
+  font-weight: 500;
+}
+
+.nav-btn:hover {
+  background: rgba(0, 247, 165, 0.15);
+  border-color: var(--primary);
+  transform: translateX(5px);
+  box-shadow: 0 0 15px rgba(0, 247, 165, 0.4);
+}
+
+.nav-btn.active {
+  background: linear-gradient(135deg, rgba(0, 247, 165, 0.25), rgba(255, 79, 216, 0.15));
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: var(--neon-glow);
+  font-weight: 700;
+}
+
+.game-area {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, rgba(10, 14, 26, 0.8), rgba(26, 15, 46, 0.6));
+  overflow: hidden;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 40px;
+  border-bottom: 2px solid rgba(0, 247, 165, 0.2);
+  background: rgba(12, 20, 35, 0.6);
+  backdrop-filter: blur(10px);
+}
+
+.header-info h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  color: var(--primary);
+  text-shadow: 0 0 20px rgba(0, 247, 165, 0.7);
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin-top: 5px;
+}
+
+.current-category {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--secondary);
+  font-weight: 600;
+}
+
+.header-stats {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.score-box {
+  background: rgba(0, 247, 165, 0.12);
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  padding: 12px 18px;
+  box-shadow: var(--neon-glow);
+  text-align: center;
+  min-width: 130px;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+
+.stat-value {
+  display: block;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--primary);
+  text-shadow: 0 0 10px rgba(0, 247, 165, 0.7);
+}
+
+.btn-reset {
+  background: rgba(0, 247, 165, 0.2);
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+}
+
+.btn-reset:hover {
+  background: rgba(0, 247, 165, 0.3);
+  box-shadow: var(--neon-glow);
+  transform: scale(1.05);
+}
+
+.games-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.game-panel {
+  display: none;
+  background: linear-gradient(135deg, rgba(26, 38, 66, 0.9), rgba(18, 27, 47, 0.95));
+  border: 2px solid rgba(0, 247, 165, 0.25);
+  border-radius: 15px;
+  padding: 30px;
+  min-height: 500px;
+  box-shadow: inset 0 0 30px rgba(0, 247, 165, 0.05);
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.game-panel.active {
+  display: block;
+}
+
+.game-panel h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  color: var(--primary);
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px rgba(0, 247, 165, 0.6);
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.memory-card {
+  aspect-ratio: 1;
+  background: rgba(26, 38, 66, 0.8);
+  border: 2px solid rgba(0, 247, 165, 0.4);
+  border-radius: 12px;
+  font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 700;
+}
+
+.memory-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(0, 247, 165, 0.4);
+  transform: translateY(-5px);
+}
+
+.memory-card.revealed {
+  background: linear-gradient(135deg, rgba(0, 247, 165, 0.2), rgba(255, 79, 216, 0.15));
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(0, 247, 165, 0.5);
+}
+
+.ttt-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  max-width: 400px;
+  margin: 30px 0;
+}
+
+.ttt-cell {
+  aspect-ratio: 1;
+  background: rgba(26, 38, 66, 0.8);
+  border: 2px solid rgba(0, 247, 165, 0.4);
+  border-radius: 12px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--primary);
+  transition: all 0.2s ease;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.ttt-cell:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(0, 247, 165, 0.4);
+}
+
+.rps-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.rps-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.rps-btn {
+  background: rgba(0, 247, 165, 0.15);
+  border: 2px solid rgba(0, 247, 165, 0.4);
+  color: var(--text-light);
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.rps-btn:hover {
+  border-color: var(--primary);
+  background: rgba(0, 247, 165, 0.25);
+  box-shadow: 0 0 15px rgba(0, 247, 165, 0.4);
+  transform: scale(1.05);
+}
+
+.rps-result {
+  background: rgba(0, 247, 165, 0.1);
+  border: 2px solid rgba(0, 247, 165, 0.3);
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  min-width: 300px;
+  box-shadow: inset 0 0 15px rgba(0, 247, 165, 0.05);
+}
+
+.rps-result h4 {
+  font-size: 1.5rem;
+  color: var(--primary);
+  margin-bottom: 10px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.snake-board {
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--primary);
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 1px;
+  margin: 20px 0;
+  box-shadow: 0 0 20px rgba(0, 247, 165, 0.4);
+}
+
+.snake-cell {
+  background: rgba(26, 38, 66, 0.6);
+  border-radius: 2px;
+}
+
+.snake-cell.head {
+  background: var(--primary);
+  box-shadow: 0 0 10px rgba(0, 247, 165, 0.8);
+}
+
+.snake-cell.body {
+  background: rgba(0, 247, 165, 0.7);
+}
+
+.snake-cell.food {
+  background: var(--secondary);
+  box-shadow: 0 0 10px rgba(255, 79, 216, 0.8);
+}
+
+.stats-display {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  background: rgba(0, 247, 165, 0.1);
+  border: 1px solid rgba(0, 247, 165, 0.3);
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.stat-item strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.start-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 500px;
+  gap: 30px;
+}
+
+.start-screen h2 {
+  font-size: 3rem;
+  color: var(--primary);
+  font-family: 'Orbitron', sans-serif;
+}
+
+.start-screen p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 500px;
+}
+
+button {
+  font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 2px solid rgba(0, 247, 165, 0.3);
+    max-height: auto;
+    padding: 20px;
+  }
+
+  .game-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .header-info h2 {
+    font-size: 1.8rem;
+  }
+
+  .games-container {
+    padding: 20px;
+  }
+
+  .memory-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

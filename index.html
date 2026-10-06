@@ -1,58 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Game Portal</title>
+    <title>🎮 Game Portal - Ultimate Arcade</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="creator-tag">Created by BoberGamingYT</div>
-    <div class="stars"></div>
+</head>
+<body>
+    <div class="background-stars"></div>
+    <div class="creator-watermark">Created by BoberGamingYT 🎮</div>
 
-    <div class="page-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <div class="brand-mark">🎮</div>
-          <div>
-            <span class="eyebrow">Ultimate</span>
-            <h1>Game Portal</h1>
-          </div>
-        </div>
-
-        <div class="category-section">
-          <p class="category-title">Classic Arcade</p>
-          <nav class="nav" id="arcade-nav"></nav>
-        </div>
-
-        <div class="category-section">
-          <p class="category-title">Modern Games</p>
-          <nav class="nav" id="modern-nav"></nav>
-        </div>
-      </aside>
-
-      <main class="content">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Arcade lobby</p>
-            <h2 id="game-title">Select a game</h2>
-          </div>
-          <div class="top-actions">
-            <div class="score-display">
-              <span class="score-label">Score</span>
-              <span class="score-value" id="global-score">0</span>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo-section">
+                <div class="logo">🎮</div>
+                <h1>Game Portal</h1>
+                <p class="tagline">Ultimate Arcade Experience</p>
             </div>
-            <button class="primary-button" id="reset-current-game">Reset</button>
-          </div>
-        </header>
 
-        <section id="game-panels"></section>
-      </main>
+            <nav class="categories-nav">
+                <div class="category-group">
+                    <h3 class="category-header">Classic Games</h3>
+                    <div class="nav-buttons" id="classic-games"></div>
+                </div>
+                <div class="category-group">
+                    <h3 class="category-header">Puzzle Games</h3>
+                    <div class="nav-buttons" id="puzzle-games"></div>
+                </div>
+                <div class="category-group">
+                    <h3 class="category-header">Modern Games</h3>
+                    <div class="nav-buttons" id="modern-games"></div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="game-area">
+            <header class="game-header">
+                <div class="header-info">
+                    <span class="current-category" id="current-category">Select a game</span>
+                    <h2 id="game-title">Welcome to Game Portal</h2>
+                </div>
+                <div class="header-stats">
+                    <div class="score-box">
+                        <span class="stat-label">Total Score</span>
+                        <span class="stat-value" id="total-score">0</span>
+                    </div>
+                    <button class="btn-reset" id="reset-btn">Reset Game</button>
+                </div>
+            </header>
+
+            <div class="games-container" id="games-container"></div>
+        </main>
     </div>
 
     <script src="app.js"></script>
-  </body>
+</body>
 </html>
